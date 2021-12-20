@@ -10,10 +10,7 @@ class MontyHallTest < Minitest::Test
     assert_equal MontyHall::Game.new(doors: 5).doors, 5
   end
 
-  def test_initialize_strategy
-    assert_equal MontyHall::Game.new().selected_strategy, :always_switch
-    refute_equal MontyHall::Game.new(selected_strategy: :stay_put).selected_strategy, :always_switch
-    assert_equal MontyHall::Game.new(selected_strategy: :stay_put).selected_strategy, :stay_put
-    assert_equal MontyHall::Game.new(selected_strategy: MontyHall::Game::STRATEGY[1]).selected_strategy, :stay_put
+  def test_door_chosen_when_switching
+    game = MontyHall::Game.new(doors: 3, number_of_doors_to_open: 1, always_switch: true)
   end
 end
