@@ -28,8 +28,6 @@ class MontyHallTest < Minitest::Test
       refute game.open_doors(number_to_open: 1).include?(chosen_door)
     end
   end
-
-
 end
 
 

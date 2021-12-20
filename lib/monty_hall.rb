@@ -34,7 +34,8 @@ module MontyHall
 
     def door_chosen_when_switching
       opened_doors = open_doors(number_to_open: 1)
-      return pick_door(excluding_opened_doors: opened_doors << @initial_choice)
+      doors_to_exclude_when_picking = opened_doors << @initial_choice
+      return pick_door(excluding_opened_doors: doors_to_exclude_when_picking)
     end
 
     def open_doors(number_to_open: 1)
