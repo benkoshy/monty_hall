@@ -30,6 +30,9 @@ class MontyHallTest < Minitest::Test
   end
 end
 
+# We need a seam
+# in order to set the winning door
+# or the door which is chosen.
 
 
 class MontyTestClass < MontyHall::Game

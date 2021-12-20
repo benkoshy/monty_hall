@@ -7,44 +7,52 @@ module MontyHall
 
   class Game
     # doors numbered from 1 to x
+    # we can pick any number from 1 to x, provided it is not open
     attr_reader :doors, :number_of_doors_to_open, :always_switch, :winning_door
 
     def initialize(doors: 3, number_of_doors_to_open: 1, always_switch: true)
       @doors = doors
-      @winning_door = pick_door
-      @initial_choice = pick_door
+      @winning_door = pick_a_door
+      @initial_choice = pick_a_door
       @always_switch = always_switch
     end
 
     def won?
       if @always_switch
-        return correct_door?(door_chosen_when_switching)
+        return @winning_door == door_chosen_after_switching
       else
-        return correct_door?(door_chosen_when_staying_put)
+        return @winning_door == @initial_choice
       end
     end
 
-    def correct_door?(chosen_door)
-      @winning_door == chosen_door
-    end
-
-    def door_chosen_when_staying_put
-      return @initial_choice
-    end
-
-    def door_chosen_when_switching
+    def door_chosen_after_switching
+      # (1) we've already chosen a door
+      # (2) the host opens another door:
       opened_doors = open_doors(number_to_open: 1)
-      doors_to_exclude_when_picking = opened_doors << @initial_choice
-      return pick_door(excluding_opened_doors: doors_to_exclude_when_picking)
+
+      # (3) the host asks us: do you want to pick another door?
+      # (4) Let's pick another door - one that is not open,
+      #     and not our initial choice
+
+      excluded_doors = opened_doors.insert(@initial_choice)
+
+      return pick_a_door(but_exclude_doors_we_cannot_open: excluded_doors)
     end
 
     def open_doors(number_to_open: 1)
-      ((1..@doors).to_a - [@initial_choice, @winning_door]).sample(number_to_open)
+      doors_we_cannot_open = [@initial_choice, @winning_door]
+      doors_we_can_open = ( all_doors - doors_we_cannot_open)
+
+      # let's pick from among the open doors
+      doors_we_can_open.sample(number_to_open)
     end
 
+    def all_doors
+      all_doors = (1..@doors).to_a
+    end
 
-    def pick_door(excluding_opened_doors: [])
-      ( (1..@doors).to_a - excluding_opened_doors).sample
+    def pick_a_door(but_exclude_doors_we_cannot_open: [])
+      ( all_doors - but_exclude_doors_we_cannot_open).sample
     end
   end
 end
